@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class mangeSys {
-    public static void main(String[] args) {
+public class MangeSys {
+    public static void startStudentSys() {
         ArrayList<Student> list = new ArrayList<>();
         Scanner sc = new Scanner(System.in);
 

@@ -1,11 +1,12 @@
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class App {
 
     public static void main(String[] args) {
         ArrayList<User> userList = new ArrayList<>();
-        User user1 = new User("diy1iren", "123aaa", "370282199106053214", "13612586327");
+        User user1 = new User("zhang", "123aaa", "370282199106053214", "13612586327");
         userList.add(user1);
         Scanner sc = new Scanner(System.in);
 
@@ -13,7 +14,7 @@ public class App {
             logInMenu();
             int choose = sc.nextInt();
             switch (choose){
-                case 1 -> login();
+                case 1 -> login(userList);
                 case 2 -> register(userList);
                 case 3 -> forgetPassword();
                 case 4 -> {
@@ -37,9 +38,98 @@ public class App {
         }
 
 
+        //登录
+        public static void login(ArrayList<User> list){
+            Scanner sc = new Scanner(System.in);
 
-        public static void login(){}
+                while (true) {
+                    System.out.println("请输入用户名：");
+                    String str = sc.next();
+                    boolean flag = judgeStr(list,str);
 
+                    if (!flag){
+                        System.out.println("用户名不存在，请先注册");
+                        break;
+                    }
+                    for (int i = 0; i < 3; i++) {
+                        System.out.println("请输入密码：");
+                        String loginPassword = sc.next();
+
+                        captcha();
+                        boolean flag2 = judgeNamePassword(list,str,loginPassword);
+
+                        if (flag2){
+                            System.out.println("登录成功");
+                            MangeSys ms = new MangeSys();
+                            ms.startStudentSys();
+                            break;
+                        }else {
+                            if (i==2){
+                                System.out.println("账号被锁定");
+                                return;
+                            }else {
+                                System.out.println("密码输入错误，还剩下"+(2-i)+"次机会");
+                            }
+                        }
+                    }
+
+
+
+
+
+                }
+
+
+
+
+        }
+
+        public static void inputPassword(){
+
+
+        }
+
+        public static boolean judgeStr(ArrayList<User> list,String str){
+
+            if (list.size()==0){
+                return false;
+            }
+            for (int i = 0; i < list.size(); i++) {
+                    User user = list.get(i);
+                    if (user.getUserName().equals(str) ){
+                        return true;
+                    }
+
+            }
+            return false;
+
+
+        }
+
+        public static boolean judgeNamePassword(ArrayList<User> list,String str,String password){
+            int num = index(list,str);
+            User user = list.get(num);
+            if (user.getPassword().equals(password)){
+                return true;
+            }else {
+                return false;
+            }
+        }
+
+        public static int index(ArrayList<User> list,String str){
+            int num =0;
+            for (int i = 0; i < list.size(); i++) {
+                User user = list.get(i);
+                if (user.getUserName().equals(str) ){
+                    num=i;
+                    break;
+                }
+            }
+            return num;
+
+        }
+
+        //注册
         public static void register(ArrayList<User> list){
             Scanner sc = new Scanner(System.in);
             User user = new User();
@@ -210,9 +300,62 @@ public class App {
             return true;
         }
 
-        public static void forgetPassword(){}
+        //忘记密码
+        public static void forgetPassword(){
+            Scanner sc = new Scanner(System.in);
+        }
 
-        public static void captcha(){}
+        //验证码
+        public static void captcha(){
+            Scanner sc = new Scanner(System.in);
+            Random r = new Random();
+
+            char [] letter =new char[52];
+
+            for (int i = 0; i < letter.length; i++) {
+                if (i<26){
+                    letter[i]= (char)('A'+i);
+                }else {
+                    letter[i]=(char) ('a'+i-26);
+                }
+            }
+            char []number={'0','1','2','3','4','5','6','7','8','9'};
+
+            while (true) {
+                char[] cap = new char[5];
+                for (int i = 0; i < 4; i++) {
+                    int num = r.nextInt(52);
+                    cap[i]=letter[num];
+                }
+                cap[4] = number[r.nextInt(10)];
+
+                int index = r.nextInt(5);
+                char temp = cap[4];
+                cap[4]=cap[index];
+                cap[index]= temp;
+
+                StringBuilder strB = new StringBuilder("");
+                for (int i = 0; i < cap.length; i++) {
+                    strB.append(cap[i]);
+                }
+                String str1= strB.toString();
+                System.out.println("验证码是：" + str1);
+
+                System.out.println("请输入验证码：");
+                String str2= sc.next();
+                if (!str2.equalsIgnoreCase(str1)){
+                    System.out.println("验证码输入错误，请重新输入");
+                    continue;
+                }else {
+                    System.out.println("验证码输入正确");
+                    break;
+                }
+            }
+
+        }
+
+
+
 
 
 
