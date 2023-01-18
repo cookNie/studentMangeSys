@@ -16,7 +16,7 @@ public class App {
             switch (choose){
                 case 1 -> login(userList);
                 case 2 -> register(userList);
-                case 3 -> forgetPassword();
+                case 3 -> forgetPassword(userList);
                 case 4 -> {
                     System.out.println("您已退出");
                     System.exit(0);
@@ -84,10 +84,7 @@ public class App {
 
         }
 
-        public static void inputPassword(){
 
-
-        }
 
         public static boolean judgeStr(ArrayList<User> list,String str){
 
@@ -205,7 +202,7 @@ public class App {
         public static String judgePassword(){
             Scanner sc = new Scanner(System.in);
             while (true) {
-                System.out.println("用户名输入正确，请输入密码；");
+                System.out.println("请输入密码；");
                 String password = sc.next();
                 System.out.println("请再次输入密码，两次密码要相同");
                 String password2 = sc.next();
@@ -301,8 +298,48 @@ public class App {
         }
 
         //忘记密码
-        public static void forgetPassword(){
+        public static void forgetPassword(ArrayList<User> list){
             Scanner sc = new Scanner(System.in);
+            while (true) {
+                System.out.println("请输入用户名：");
+                String str = sc.next();
+                boolean flag = judgeStr(list,str);
+
+                if (!flag){
+                    System.out.println("用户名不存在，请先注册");
+                    break;
+                }
+
+                System.out.println("请输入身份证号：");
+                String personNumber = sc.next();
+                System.out.println("请输入手机号：");
+                String phoneNum = sc.next();
+
+                boolean result = judgePersonPhone(personNumber,phoneNum,list,str);
+
+                if (!result){
+                    System.out.println("输入的信息有误，无法修改密码");
+                    break;
+                }
+                User user = list.get(index(list,str));
+                user.setPassword(judgePassword());
+                System.out.println("密码修改成功，请使用其他功能");
+                break;
+
+
+            }
+        }
+
+        public static boolean judgePersonPhone(String person,String phone,ArrayList<User> list,String str){
+
+            User user = list.get(index(list,str));
+
+            if (user.getIdNumber().equalsIgnoreCase(person)&&user.getPhoneNumber().equals(phone)){
+                return true;
+            }else {
+                return false;
+            }
+
         }
 
         //验证码
